@@ -1,10 +1,11 @@
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
+using System.Text;
 
-public class ApplicationDbContext : DbContext 
+public class ApplicationDbContext : DbContext
 {
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
-    
+
     public DbSet<Admin> Admins { get; set; }
     public DbSet<AdminProfile> AdminProfiles { get; set; }
     public DbSet<Calories> Calories { get; set; }

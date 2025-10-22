@@ -8,8 +8,9 @@ namespace Domain.Entities
         [Key]
         public Guid adminId { get; set; }
         public string adminName { get; set; }
-        public string adminEmail { get; set; }
-        public string adminPassword { get; set; }
+        [Required]
+        public string adminEmail { get; set; } = "aryanpradhan773@gmail.com";
+        public string adminPassword { get; set; } = "aryan";
         public DateTime createdAt { get; set; } = DateTime.Now;
 
         public AdminProfile AdminProfile { get; set; } // 1-to-1 relationship with AdminProfile

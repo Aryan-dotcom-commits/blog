@@ -34,6 +34,9 @@ D:\.NET\FitnessTracker\Server\bin\Debug\net9.0\Microsoft.OpenApi.dll
 D:\.NET\FitnessTracker\Server\bin\Debug\net9.0\Mono.TextTemplating.dll
 D:\.NET\FitnessTracker\Server\bin\Debug\net9.0\Npgsql.dll
 D:\.NET\FitnessTracker\Server\bin\Debug\net9.0\Npgsql.EntityFrameworkCore.PostgreSQL.dll
+D:\.NET\FitnessTracker\Server\bin\Debug\net9.0\Swashbuckle.AspNetCore.Swagger.dll
+D:\.NET\FitnessTracker\Server\bin\Debug\net9.0\Swashbuckle.AspNetCore.SwaggerGen.dll
+D:\.NET\FitnessTracker\Server\bin\Debug\net9.0\Swashbuckle.AspNetCore.SwaggerUI.dll
 D:\.NET\FitnessTracker\Server\bin\Debug\net9.0\System.CodeDom.dll
 D:\.NET\FitnessTracker\Server\bin\Debug\net9.0\System.Composition.AttributedModel.dll
 D:\.NET\FitnessTracker\Server\bin\Debug\net9.0\System.Composition.Convention.dll
@@ -114,6 +117,7 @@ D:\.NET\FitnessTracker\Server\obj\Debug\net9.0\Server.AssemblyInfo.cs
 D:\.NET\FitnessTracker\Server\obj\Debug\net9.0\Server.csproj.CoreCompileInputs.cache
 D:\.NET\FitnessTracker\Server\obj\Debug\net9.0\Server.MvcApplicationPartsAssemblyInfo.cs
 D:\.NET\FitnessTracker\Server\obj\Debug\net9.0\Server.MvcApplicationPartsAssemblyInfo.cache
+D:\.NET\FitnessTracker\Server\obj\Debug\net9.0\Server.sourcelink.json
 D:\.NET\FitnessTracker\Server\obj\Debug\net9.0\rjimswa.dswa.cache.json
 D:\.NET\FitnessTracker\Server\obj\Debug\net9.0\rjsmrazor.dswa.cache.json
 D:\.NET\FitnessTracker\Server\obj\Debug\net9.0\rjsmcshtml.dswa.cache.json
