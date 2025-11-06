@@ -8,11 +8,6 @@ public class AdminConfig : IEntityTypeConfiguration<Admin>
     {
         admin.HasKey(a => a.adminId);
 
-        admin.HasOne(a => a.AdminProfile)
-            .WithOne(p => p.Admin)
-            .HasForeignKey<AdminProfile>(p => p.adminId)
-            .OnDelete(DeleteBehavior.Cascade);
-
         admin.HasMany(fl => fl.FoodLogs)
             .WithOne(a => a.Admin)
             .HasForeignKey(f => f.adminId)

@@ -1,49 +1,79 @@
 using Domain.Entities;
 using Microsoft.AspNetCore.Http.HttpResults;
+using System.Diagnostics;
 
 namespace Application.Services
 {
     public class AdminService
     {
         private readonly IAdminInterface _adminRepo;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public AdminService(IAdminInterface adminRepo)
+        public AdminService(IAdminInterface adminRepo, IHttpContextAccessor httpContextAccessor)
         {
             _adminRepo = adminRepo;
+            _httpContextAccessor = httpContextAccessor;
         }
 
-        public async Task<Admin?> GetAdminByEmail(string usermail)
+        public async Task<ApiResponse<Admin>> RegisterAdmin(RegisterDTO admin)
         {
-            var adminemail = await _adminRepo.GetAdmin(usermail);
+            try
+                {
+                    var adminDetails = new Admin
+                    {
+                        adminId = Guid.NewGuid(),
+                        adminName = admin.adminName,
+                        adminEmail = admin.adminEmail,
+                        adminPassword = admin.adminPassword,
+                        DOB = DateTime.SpecifyKind(admin.DOB, DateTimeKind.Utc),
+                        Gender = Domain.Enums.Gender.Male,
+                        TargetWeight = admin.TargetWeight,
+                        ActivityLevel = admin.ActivityLevel,
+                        createdAt = DateTime.UtcNow,
+                    };
 
-            if (adminemail == null) throw new Exception("Admin not found");
+                await _adminRepo.RegisterAdmin(admin);
 
-            return adminemail;
+                if (admin.adminEmail == adminDetails.adminEmail) return new ApiResponse<Admin>
+                {
+                    Success = false,
+                    Message = "Admin exists with the same email",
+                    Data = adminDetails,
+                    TraceId = _httpContextAccessor.HttpContext?.TraceIdentifier
+                };
+
+                var adminCount = (await _adminRepo.GetAdmin()).Count();
+                if (adminCount > 0) return new ApiResponse<Admin>
+                {
+                    Success = false,
+                    Message = "Admin exists with a different mail",
+                    Data = adminDetails
+                };
+
+                return new ApiResponse<Admin>
+                {
+                    Success = true,
+                    Message = "Admin registered successfully",
+                    Data = adminDetails,
+                    TraceId = _httpContextAccessor.HttpContext?.TraceIdentifier
+                };
+                    
+                }
+                catch (Exception ex)
+                {
+                    return new ApiResponse<Admin>
+                    {
+                        Success = false,
+                        Message = $"Here is the stack trace: {ex.StackTrace}",
+                        Data = null,
+                        TraceId = _httpContextAccessor.HttpContext?.TraceIdentifier
+                    };
+                }
         }
 
-        public async Task<Admin?> GetAdminAsync()
+        public async Task<IEnumerable<Admin>> GetAdmins()
         {
-            var admin = await _adminRepo.AdminUser();
-
-            if (admin == null) throw new Exception("Admin not found");
-
-            return admin;
-        }
-
-        public async Task<AdminProfile?> GetAdminProfileByEmail(Guid adminId)
-        {
-            var adminProfile = await _adminRepo.GetAdminProfile(adminId);
-
-            if (adminProfile == null) throw new Exception("Admin Profile not found");
-
-            return adminProfile;
-        }
-
-        public async Task<Admin> LoginAdmin(string email, string password)
-        {
-            var admin = await _adminRepo.LoginAdmin(email, password);
-
-            return admin;
+            return await _adminRepo.GetAdmin();
         }
     }
 }

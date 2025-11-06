@@ -10,25 +10,23 @@ public class AdminRepo : IAdminInterface
         _context = context;
     }
 
-    public async Task<Admin?> GetAdmin(string usermail)
+
+    public async Task RegisterAdmin(RegisterDTO registerDTO)
     {
-        return await _context.Admins.Where(a => a.adminEmail == usermail).FirstOrDefaultAsync();
+        var admin = new Admin
+        {
+            adminId = Guid.NewGuid(),
+            adminName = registerDTO.adminName,
+            adminEmail = registerDTO.adminEmail,
+            adminPassword = registerDTO.adminPassword
+        };
+        
+        _context.Admins.AddAsync(admin);
+        await _context.SaveChangesAsync();
     }
-
-    public async Task<Admin?> AdminUser()
+    
+    public async Task<IEnumerable<Admin>> GetAdmin()
     {
-        return await _context.Admins.FirstOrDefaultAsync();
-    }
-
-    public async Task<AdminProfile?> GetAdminProfile(Guid adminId)
-    {
-        var admin = await _context.Admins.Where(a => a.adminId == adminId).FirstOrDefaultAsync();
-
-        return await _context.AdminProfiles.Where(ap => ap.profileId == admin.adminId).FirstOrDefaultAsync();
-    }
-
-    public async Task<Admin> LoginAdmin(string email, string password)
-    {
-       return await _context.Admins.Where(a => a.adminEmail == email && a.adminPassword == password).FirstOrDefaultAsync();
+        return await _context.Admins.ToListAsync();
     }
 }

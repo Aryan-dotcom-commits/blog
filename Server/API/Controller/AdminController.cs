@@ -14,89 +14,15 @@ public class AdminController : ControllerBase
         _admin = admin;
     }
 
-    [HttpGet("api/admin")]
-    public async Task<IActionResult> GetAdmin([FromQuery] string usermail)
+    [HttpPost("api/registerAdmin")]
+    public async Task<ApiResponse<Admin>> RegisterAdmin([FromBody] RegisterDTO admin)
     {
-        try
-        {
-            if (string.IsNullOrEmpty(usermail))
-            {
-                return BadRequest("Email cannot be null or empty");
-            }
-
-            var admin = await _admin.GetAdminByEmail(usermail);
-
-            if (admin == null) return NotFound("Admin not found");
-
-            return Ok(admin);
-        }
-        catch (Exception e)
-        {
-            return StatusCode(500, new
-            {
-                Message = "An error occurred while processing your request.",
-                Details = e.Message,
-                trace = e.StackTrace
-            });
-        }
+        return await _admin.RegisterAdmin(admin);
     }
 
-
-    [HttpGet("api/admin/details")]
-    public async Task<IActionResult> GetAdminDetails()
+    [HttpGet("api/getAdmin")]
+    public async Task<IActionResult> GetAdmin()
     {
-        try
-        {
-            var admin = await _admin.GetAdminAsync();
-            return Ok(admin);
-        }
-        catch (Exception e)
-        {
-            return StatusCode(500, new
-            {
-                Message = "An error occurred while processing your request.",
-                Details = e.Message,
-                trace = e.StackTrace
-            });
-        }
-    }
-
-    [HttpGet("api/admin/profile")]
-    public async Task<IActionResult> GetAdminProfile([FromQuery] Guid adminId)
-    {
-        try
-        {
-            var profile = await _admin.GetAdminProfileByEmail(adminId);
-            return Ok(profile);
-        }
-        catch (Exception e)
-        {
-            return StatusCode(500, new
-            {
-                Message = "An error occurred while processing your request.",
-                Details = e.Message,
-                trace = e.StackTrace
-            });
-        }
-    }
-
-    [HttpGet("api/admin/login")]
-    public async Task<IActionResult> LoginAdmin([FromQuery] string email, string password)
-    {
-        try
-        {
-            var admin = await _admin.LoginAdmin(email, password);
-            return Ok(admin);
-        }
-
-        catch (Exception e)
-        {
-            return StatusCode(500, new
-            {
-                Message = "An error occurred while processing your request.",
-                Details = e.Message,
-                trace = e.StackTrace
-            });
-        }
+        return Ok(await _admin.GetAdmins());
     }
 }

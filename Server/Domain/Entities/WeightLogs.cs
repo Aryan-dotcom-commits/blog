@@ -7,10 +7,13 @@ namespace Domain.Entities
     {
         [Key]
         public Guid weightLogId { get; set; }
-        public int CurrentWeight { get; set; }
-        public WeightUnits WeightUnit { get; set; }
+        public decimal CurrentWeight { get; set; }
+        public WeightUnits WeightUnit { get; set; } 
+
+        public string Notes { get; set; }
+        
         public bool IsGoalAchieved { get; set; }
-        public DateTime loggedAt { get; set; } = DateTime.Now;
+        public DateTime loggedAt { get; set; } = DateTime.UtcNow;
         public Guid adminId { get; set; } // Foreign key to Admin
         public Admin Admin { get; set; }
     }

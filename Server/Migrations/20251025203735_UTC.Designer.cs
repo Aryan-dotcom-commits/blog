@@ -11,8 +11,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Server.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20251022163323_SeedingAdmins")]
-    partial class SeedingAdmins
+    [Migration("20251025203735_UTC")]
+    partial class UTC
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -30,6 +30,18 @@ namespace Server.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<int>("ActivityLevel")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("DOB")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("Gender")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("TargetWeight")
+                        .HasColumnType("integer");
+
                     b.Property<string>("adminEmail")
                         .IsRequired()
                         .HasColumnType("text");
@@ -45,44 +57,12 @@ namespace Server.Migrations
                     b.Property<DateTime>("createdAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.HasKey("adminId");
-
-                    b.ToTable("Admins");
-                });
-
-            modelBuilder.Entity("Domain.Entities.AdminProfile", b =>
-                {
-                    b.Property<Guid>("profileId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<int>("ActivityLevel")
-                        .HasColumnType("integer");
-
-                    b.Property<DateTime>("DOB")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<int>("Gender")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("TargetWeight")
-                        .HasColumnType("integer");
-
-                    b.Property<Guid>("adminId")
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime>("createdAt")
-                        .HasColumnType("timestamp with time zone");
-
                     b.Property<DateTime>("updatedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.HasKey("profileId");
+                    b.HasKey("adminId");
 
-                    b.HasIndex("adminId")
-                        .IsUnique();
-
-                    b.ToTable("AdminProfiles");
+                    b.ToTable("Admins");
                 });
 
             modelBuilder.Entity("Domain.Entities.Calories", b =>
@@ -251,17 +231,6 @@ namespace Server.Migrations
                     b.ToTable("WeightLogs");
                 });
 
-            modelBuilder.Entity("Domain.Entities.AdminProfile", b =>
-                {
-                    b.HasOne("Domain.Entities.Admin", "Admin")
-                        .WithOne("AdminProfile")
-                        .HasForeignKey("Domain.Entities.AdminProfile", "adminId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Admin");
-                });
-
             modelBuilder.Entity("Domain.Entities.Calories", b =>
                 {
                     b.HasOne("Domain.Entities.Admin", "Admin")
@@ -319,9 +288,6 @@ namespace Server.Migrations
 
             modelBuilder.Entity("Domain.Entities.Admin", b =>
                 {
-                    b.Navigation("AdminProfile")
-                        .IsRequired();
-
                     b.Navigation("Calories");
 
                     b.Navigation("ExerciseLogs");
