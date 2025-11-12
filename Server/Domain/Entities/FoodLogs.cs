@@ -17,7 +17,7 @@ namespace Domain.Entities
         public int? Fats { get; set; }
         public DateTime LogDate { get; set; } = DateTime.Now;
 
-        public Guid adminId { get; set; }
-        public Admin Admin { get; set; } // Foreign key to Admin
+        public Guid userId { get; set; }
+        public User User { get; set; } // Foreign key to Admin
     }
 }

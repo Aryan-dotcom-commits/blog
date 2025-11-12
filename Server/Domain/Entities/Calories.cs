@@ -12,7 +12,7 @@ namespace Domain.Entities
         public DateTime logDate { get; set; } = DateTime.Now;
         public DateTime LastCalorieUpdate { get; set; } = DateTime.Now;
 
-        public Guid adminId { get; set; }
-        public Admin Admin { get; set; }
+        public Guid userId { get; set; }
+        public User User { get; set; }
     }
 }

@@ -4,64 +4,64 @@ using System.Diagnostics;
 
 namespace Application.Services
 {
-    public class AdminService
+    public class UserService
     {
-        private readonly IAdminInterface _adminRepo;
+        private readonly IUserInterface _userRepo;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public AdminService(IAdminInterface adminRepo, IHttpContextAccessor httpContextAccessor)
+        public UserService(IUserInterface userRepo, IHttpContextAccessor httpContextAccessor)
         {
-            _adminRepo = adminRepo;
+            _userRepo = userRepo;
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public async Task<ApiResponse<Admin>> RegisterAdmin(RegisterDTO admin)
+        public async Task<ApiResponse<User>> RegisterUser(RegisterDTO user)
         {
             try
                 {
-                    var adminDetails = new Admin
+                    var userDetails = new User
                     {
-                        adminId = Guid.NewGuid(),
-                        adminName = admin.adminName,
-                        adminEmail = admin.adminEmail,
-                        adminPassword = admin.adminPassword,
-                        DOB = DateTime.SpecifyKind(admin.DOB, DateTimeKind.Utc),
+                        userId = Guid.NewGuid(),
+                        userName = user.userName,
+                        userMail = user.userEmail,
+                        userPassword = user.userPassword,
+                        DOB = DateTime.SpecifyKind(user.DOB, DateTimeKind.Utc),
                         Gender = Domain.Enums.Gender.Male,
-                        TargetWeight = admin.TargetWeight,
-                        ActivityLevel = admin.ActivityLevel,
+                        TargetWeight = user.TargetWeight,
+                        ActivityLevel = user.ActivityLevel,
                         createdAt = DateTime.UtcNow,
                     };
 
-                await _adminRepo.RegisterAdmin(admin);
+                await _userRepo.RegisterUser(user);
 
-                if (admin.adminEmail == adminDetails.adminEmail) return new ApiResponse<Admin>
+                if (user.userEmail == userDetails.userMail) return new ApiResponse<User>
                 {
                     Success = false,
                     Message = "Admin exists with the same email",
-                    Data = adminDetails,
+                    Data = userDetails,
                     TraceId = _httpContextAccessor.HttpContext?.TraceIdentifier
                 };
 
-                var adminCount = (await _adminRepo.GetAdmin()).Count();
-                if (adminCount > 0) return new ApiResponse<Admin>
+                var adminCount = (await _userRepo.GetUser()).Count();
+                if (adminCount > 0) return new ApiResponse<User>
                 {
                     Success = false,
                     Message = "Admin exists with a different mail",
-                    Data = adminDetails
+                    Data = userDetails
                 };
 
-                return new ApiResponse<Admin>
+                return new ApiResponse<User>
                 {
                     Success = true,
                     Message = "Admin registered successfully",
-                    Data = adminDetails,
+                    Data = userDetails,
                     TraceId = _httpContextAccessor.HttpContext?.TraceIdentifier
                 };
                     
                 }
                 catch (Exception ex)
                 {
-                    return new ApiResponse<Admin>
+                    return new ApiResponse<User>
                     {
                         Success = false,
                         Message = $"Here is the stack trace: {ex.StackTrace}",
@@ -71,9 +71,9 @@ namespace Application.Services
                 }
         }
 
-        public async Task<IEnumerable<Admin>> GetAdmins()
+        public async Task<IEnumerable<User>> GetUsers()
         {
-            return await _adminRepo.GetAdmin();
+            return await _userRepo.GetUser();
         }
     }
 }

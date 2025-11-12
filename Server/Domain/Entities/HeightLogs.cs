@@ -9,7 +9,7 @@ namespace Domain.Entities
         public Guid heightLogId { get; set; }
         public int CurrentHeight { get; set; }
         public HeightUnits HeightUnit { get; set; }
-        public Guid adminId { get; set; } // Navigation property back to Admin
-        public Admin Admin { get; set; }
+        public Guid userId { get; set; } // Navigation property back to Admin
+        public User User { get; set; }
     }
 }

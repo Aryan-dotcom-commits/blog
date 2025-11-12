@@ -14,7 +14,7 @@ namespace Domain.Entities
         
         public bool IsGoalAchieved { get; set; }
         public DateTime loggedAt { get; set; } = DateTime.UtcNow;
-        public Guid adminId { get; set; } // Foreign key to Admin
-        public Admin Admin { get; set; }
+        public Guid userId { get; set; } // Foreign key to Admin
+        public User User { get; set; }
     }
 }

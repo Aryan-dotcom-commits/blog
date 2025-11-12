@@ -4,14 +4,14 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Domain.Entities
 {
-    public class Admin
+    public class User
     {
         [Key]
-        public Guid adminId { get; set; }
-        public string adminName { get; set; }
+        public Guid userId { get; set; }
+        public string userName { get; set; }
         [Required]
-        public string adminEmail { get; set; } = "aryanpradhan773@gmail.com";
-        public string adminPassword { get; set; } = "aryan";
+        public string userMail { get; set; }
+        public string userPassword { get; set; }
         public DateTime createdAt { get; set; } = DateTime.UtcNow;
         public DateTime DOB { get; set; } = DateTime.UtcNow;
         public Gender Gender { get; set; }

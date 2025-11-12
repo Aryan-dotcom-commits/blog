@@ -14,8 +14,8 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<ApplicationDbContext>();
 
 // Adding services
-builder.Services.AddScoped<IAdminInterface, AdminRepo>();
-builder.Services.AddScoped<AdminService>();
+builder.Services.AddScoped<IUserInterface, UserRepo>();
+builder.Services.AddScoped<UserService>();
 
 builder.Services.AddTransient<IWeightInterface, WeightRepo>();
 builder.Services.AddTransient<WeightServices>();
