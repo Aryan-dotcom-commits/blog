@@ -1,32 +1,38 @@
+using Server.Application.Interface;
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
+using Server.Infrastructure.Database;
 
-public class UserRepo : IUserInterface
+namespace Server.Infrastructure.Repository;
+
+public class UserRepo : IUserRepository
 {
-    private readonly ApplicationDbContext _context;
+    private readonly ApplicationDBContext _dbContext;
 
-    public UserRepo(ApplicationDbContext context)
+    public UserRepo(ApplicationDBContext dbContext)
     {
-        _context = context;
+        _dbContext = dbContext;
     }
 
-
-    public async Task RegisterUser(RegisterDTO registerDTO)
+    public async Task<IEnumerable<User>> GetAllUsers()
     {
-        var user = new User
-        {
-            userId = Guid.NewGuid(),
-            userName = registerDTO.userName,
-            userMail = registerDTO.userEmail,
-            userPassword = registerDTO.userPassword
-        };
-        
-        _context.Users.AddAsync(user);
-        await _context.SaveChangesAsync();
+        return await _dbContext.User.ToListAsync();
     }
-    
-    public async Task<IEnumerable<User>> GetUser()
+
+    public async Task<User> GetUserById(string id)
     {
-        return await _context.Users.ToListAsync();
+        return await _dbContext.User.FindAsync(id);
+    }
+
+    public async Task<User> SearchUserByName(string userName)
+    {
+        return await _dbContext.User.FirstOrDefaultAsync(u => u.username == userName);
+    }
+
+    public async Task<User> CreateUser(User user)
+    {
+        await _dbContext.User.AddAsync(user);
+        await _dbContext.SaveChangesAsync();
+        return user;
     }
 }

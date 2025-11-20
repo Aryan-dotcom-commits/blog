@@ -1,79 +1,49 @@
+using Server.Infrastructure.Repository;
 using Domain.Entities;
-using Microsoft.AspNetCore.Http.HttpResults;
-using System.Diagnostics;
+using Server.Application.DTO;
+namespace Server.Application.Services;
 
-namespace Application.Services
+public class UserService
 {
-    public class UserService
+    private readonly UserRepo _userRepo;
+
+    public UserService(UserRepo userRepo)
     {
-        private readonly IUserInterface _userRepo;
-        private readonly IHttpContextAccessor _httpContextAccessor;
+        _userRepo = userRepo;
+    }
 
-        public UserService(IUserInterface userRepo, IHttpContextAccessor httpContextAccessor)
+    public async Task<ApiResponse<IEnumerable<UserDTO>>> GetAllUsers()
+    {
+        try
         {
-            _userRepo = userRepo;
-            _httpContextAccessor = httpContextAccessor;
-        }
+            var users = await _userRepo.GetAllUsers();
 
-        public async Task<ApiResponse<User>> RegisterUser(RegisterDTO user)
-        {
-            try
+            if (users == null)
+            {
+                return new ApiResponse<IEnumerable<UserDTO>>
                 {
-                    var userDetails = new User
-                    {
-                        userId = Guid.NewGuid(),
-                        userName = user.userName,
-                        userMail = user.userEmail,
-                        userPassword = user.userPassword,
-                        DOB = DateTime.SpecifyKind(user.DOB, DateTimeKind.Utc),
-                        Gender = Domain.Enums.Gender.Male,
-                        TargetWeight = user.TargetWeight,
-                        ActivityLevel = user.ActivityLevel,
-                        createdAt = DateTime.UtcNow,
-                    };
-
-                await _userRepo.RegisterUser(user);
-
-                if (user.userEmail == userDetails.userMail) return new ApiResponse<User>
-                {
-                    Success = false,
-                    Message = "Admin exists with the same email",
-                    Data = userDetails,
-                    TraceId = _httpContextAccessor.HttpContext?.TraceIdentifier
-                };
-
-                var adminCount = (await _userRepo.GetUser()).Count();
-                if (adminCount > 0) return new ApiResponse<User>
-                {
-                    Success = false,
-                    Message = "Admin exists with a different mail",
-                    Data = userDetails
-                };
-
-                return new ApiResponse<User>
-                {
+                    Message = "No users found",
                     Success = true,
-                    Message = "Admin registered successfully",
-                    Data = userDetails,
-                    TraceId = _httpContextAccessor.HttpContext?.TraceIdentifier
+                    Data = null
                 };
-                    
-                }
-                catch (Exception ex)
-                {
-                    return new ApiResponse<User>
-                    {
-                        Success = false,
-                        Message = $"Here is the stack trace: {ex.StackTrace}",
-                        Data = null,
-                        TraceId = _httpContextAccessor.HttpContext?.TraceIdentifier
-                    };
-                }
-        }
+            }
 
-        public async Task<IEnumerable<User>> GetUsers()
+            var userDTO = users.Select(s => new UserDTO
+            {
+                UserName = s.username,
+                UserMail = s.useremail
+            });
+
+            return new ApiResponse<IEnumerable<UserDTO>>
+            {
+                Message = "Users fetched successfully",
+                Success = true,
+                Data = userDTO
+            };
+        }
+        catch (Exception ex)
         {
-            return await _userRepo.GetUser();
+            throw new Exception();
         }
     }
 }

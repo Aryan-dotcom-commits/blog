@@ -1,28 +1,24 @@
-using Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
-using Application.Services;
-using Microsoft.AspNetCore.Http.HttpResults;
+using Server.Application.Interface;
+using Server.Application.Services;
+
+namespace Server.API.Controller;
 
 [ApiController]
-[Route("")]
+[Route("api/[controller]")]
 public class UserController : ControllerBase
 {
-    private readonly UserService _admin;
-
-    public UserController(UserService user)
+    private readonly IUserRepository _userRepository;
+    
+    public UserController(IUserRepository userRepository)
     {
-        _admin = user;
+        _userRepository = userRepository;
     }
 
-    [HttpPost("api/registerUser")]
-    public async Task<ApiResponse<User>> RegisterUsers([FromBody] RegisterDTO user)
+    [HttpGet("/all")]
+    public async Task<IActionResult> GetAll()
     {
-        return await _admin.RegisterUser(user);
-    }
-
-    [HttpGet("api/getAllUsers")]
-    public async Task<IActionResult> GetUser()
-    {
-        return Ok(await _admin.GetUsers());
+        var users = await _userRepository.GetAllUsers();
+        return Ok(users);
     }
 }

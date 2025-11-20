@@ -1,6 +1,6 @@
-using Application.Services;
 using Microsoft.EntityFrameworkCore;
-using Npgsql;
+using Server.Application.DI;
+using Server.Infrastructure.Database;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,23 +11,8 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddHttpContextAccessor();
 
-builder.Services.AddScoped<ApplicationDbContext>();
-
-// Adding services
-builder.Services.AddScoped<IUserInterface, UserRepo>();
-builder.Services.AddScoped<UserService>();
-
-builder.Services.AddTransient<IWeightInterface, WeightRepo>();
-builder.Services.AddTransient<WeightServices>();
-
-
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
-
-//Add DB Context
-builder.Services.AddDbContext<ApplicationDbContext>(
-    options => options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"))
-);
 
 builder.Services.AddCors(options =>
 {
@@ -39,6 +24,12 @@ builder.Services.AddCors(options =>
               .AllowCredentials();
     });
 });
+
+builder.Services.AddDbContext<ApplicationDBContext>(
+    options => options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+
+builder.Services.AddServices();
 
 var app = builder.Build();
 
@@ -56,5 +47,6 @@ app.UseCors("AllowLocalhost");
 app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
+
 
 app.Run();

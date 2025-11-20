@@ -49,4 +49,36 @@ namespace Domain.Enums
         Core = 6,
         Cardio = 7,
     }
+
+    public enum Category
+    {
+        Cardio = 0,
+        Strength = 1,
+        Flexibility = 2
+    }
+
+    public enum Intensity
+    {
+        Low = 0,
+        Medium = 1,
+        High = 2,
+        Extreme = 3
+    }
+
+    public enum FoodType
+    {
+        FastFood = 0,
+        Dairy = 1,
+        Vegetables = 2,
+        Meat = 3
+    }
+
+    public enum MealType
+    {
+        Breakfast = 0,
+        Lunch = 1,
+        Dinner = 2,
+        Snack = 3
+    }
+
 }

@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using Domain.Enums;
 
 namespace Domain.Entities
@@ -6,15 +7,13 @@ namespace Domain.Entities
     public class WeightLogs
     {
         [Key]
-        public Guid weightLogId { get; set; }
-        public decimal CurrentWeight { get; set; }
-        public WeightUnits WeightUnit { get; set; } 
-
-        public string Notes { get; set; }
+        public Guid WeightLogID { get; set; }
+        [ForeignKey(nameof(User))]
+        public Guid UserID { get; set; }
         
-        public bool IsGoalAchieved { get; set; }
-        public DateTime loggedAt { get; set; } = DateTime.UtcNow;
-        public Guid userId { get; set; } // Foreign key to Admin
-        public User User { get; set; }
+        public int currentWeight { get; set; }
+        public DateTime LoggedDate { get; set; } = DateTime.Now;
+        
+        public string Notes { get; set; }
     }
 }
