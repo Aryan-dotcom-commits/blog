@@ -19,7 +19,7 @@ public class UserRepo : IUserRepository
         return await _dbContext.User.ToListAsync();
     }
 
-    public async Task<User> GetUserById(string id)
+    public async Task<User> GetUserById(Guid id)
     {
         return await _dbContext.User.FindAsync(id);
     }

@@ -46,4 +46,45 @@ public class UserService
             throw new Exception();
         }
     }
+
+    public async Task<ApiResponse<User>> GetUserById(Guid id)
+    {
+        try
+        {
+            var userbyId = await _userRepo.GetUserById(id);
+
+            if (userbyId == null)
+                return new ApiResponse<User>
+                {
+                    Message = "No user of this ID can be found",
+                    Success = true,
+                    Data = null
+                };
+
+            if (userbyId.Equals(false))
+                return new ApiResponse<User>
+                {
+                    Message = "DB is empty",
+                    Success = true,
+                    Data = null
+                };
+            
+            var user = new User
+            {
+                username = userbyId.username,
+                useremail = userbyId.useremail
+            };
+
+            return new ApiResponse<User>
+            {
+                Message = "User found",
+                Success = true,
+                Data = null
+            };
+        }
+        catch (Exception ex)
+        {
+            throw new Exception();
+        }
+    }
 }

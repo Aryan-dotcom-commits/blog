@@ -21,4 +21,11 @@ public class UserController : ControllerBase
         var users = await _userRepository.GetAllUsers();
         return Ok(users);
     }
+
+    [HttpGet("/user/{id}")]
+    public async Task<IActionResult> GetUserById(Guid id)
+    {
+        var usersById = await _userRepository.GetUserById(id);
+        return Ok(usersById.username);
+    }
 }
